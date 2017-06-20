@@ -7,10 +7,14 @@ import Yesod.Core
 
 getHomeR :: Handler Html
 getHomeR = defaultLayout $ do
-    setTitle "Minimal Multifile"
+    setTitle "Different <>"
     [whamlet|
-        <p>
-            <a href=@{AddR 5 7}>HTML addition
-        <p>
-            <a href=@{AddR 5 7}?_accept=application/json>JSON addition
+        <h1>
+            Pagina do Adaão
+
+
+--        <p>
+--            <a href=@{AddR 5 7}>HTML addition
+--        <p>
+--            <a href=@{AddR 5 7}?_accept=application/json>JSON addition
     |]

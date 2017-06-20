@@ -32,6 +32,7 @@ mesmo, caso contrário o valor
 retornado é sempre Nada.
 Referência: http://learnyouahaskell.com/functors-applicative-functors-and-monoids
 -}
+
 {-
 Exercício 6.4 
 Crie uma instância de Monad para o 
