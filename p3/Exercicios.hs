@@ -1,5 +1,8 @@
 module Exercicios where
+import Control.Applicative
+import Control.Monad
 
+data Coisa a = Nada | UmaCoisa a | DuasCoisas a a | TresCoisas a a a deriving Show
 
 {-
 Exercício 6.2 
@@ -10,6 +13,12 @@ A função deve ser aplicada em
 todas as coordenadas de Coisa.
 -}
 
+instance Functor Coisa where
+    fmap f Nada = Nada
+    fmap f (UmaCoisa a) = UmaCoisa (f a)
+    fmap f (DuasCoisas a b) = DuasCoisas (f a) (f b)
+    fmap f (TresCoisas a b c) = TresCoisas (f a) (f b) (f c)
+    
 
 {-
 Exercício 6.3 
