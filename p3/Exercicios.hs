@@ -106,7 +106,7 @@ class Monad m where
 -}
 instance Monad Coisa where
 --  return :: a -> Coisa a    
-    return = UmaCoisa
+    return x = UmaCoisa x
 
 --  (>>=) :: Coisa a -> (a -> Coisa b) -> Coisa b
     Nada >>= f = Nada
@@ -183,7 +183,7 @@ Exercício 6.8
 Escreva a função do exercício 6.5 em termos dos operadores Applicative.
 -}
 
-
+-- (TresCoisas (*2) (*3) (*4)) <*> ((\x -> (TresCoisas x x x)) $ 3)
 
 {-
 Exercício 6.9 
@@ -194,5 +194,48 @@ análogas (a menos de recursão).
 -}
 
 {-
+ARVORE DO LEARN YOU A HASKELL
+data Tree a = EmptyTree | Node a (Tree a) (Tree a) deriving (Show, Read, Eq)
+
+singleton :: a -> Tree a  
+singleton x = Node x EmptyTree EmptyTree  
+  
+treeInsert :: (Ord a) => a -> Tree a -> Tree a  
+treeInsert x EmptyTree = singleton x  
+treeInsert x (Node a left right)   
+    | x == a = Node x left right  
+    | x < a  = Node a (treeInsert x left) right  
+    | x > a  = Node a left (treeInsert x right) 
+
+treeElem :: (Ord a) => a -> Tree a -> Bool  
+treeElem x EmptyTree = False  
+treeElem x (Node a left right)  
+    | x == a = True  
+    | x < a  = treeElem x left  
+    | x > a  = treeElem x right 
+-}
+ -- ARVORE DO PROF
+data Arvore a = Nulo | Leaf a | Branch a (Arvore a) (Arvore a) deriving Show
+
+arvore :: Arvore Int
+arvore = Branch 50 (Branch 30 (Leaf 20) (Leaf 40)) (Branch 90 Nulo (Leaf 100))
+
+instance Functor Arvore where
+    fmap f Nulo = Nulo
+    fmap f (Leaf a) = Leaf (f a)
+    fmap f (Branch a b c) = Branch (f a) (fmap f b) (fmap f c)
+
+instance Applicative Arvore where
+    pure = Leaf
+    Nulo <*> _ = Nulo
+    (Leaf f) <*> (Leaf a) = Leaf (f a)
+    (Branch f j k) <*> (Branch a b c) = Branch (f a) (j <*> b) (k <*> c)
+    _ <*> _ = Nulo
+
+{-
 Exercício 6.10 Crie 5 expressões usando o Applicative Functor de seu tipo Tree.
 -} 
+ 
+-- (*2) <$> arvore
+
+--  (Branch (+50) (Leaf (*2)) (Leaf (+2))) <*> (Branch 1 (Leaf 2) (Leaf 5))
