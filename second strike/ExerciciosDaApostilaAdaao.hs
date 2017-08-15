@@ -21,7 +21,10 @@ lPerg answers = fmap pergNum answers
 --3. and’: recebe duas Perguntas como parâmetro e retorna a tabela verdade do
 --and lógico usando Sim como verdadeiro e Nao como falso.
 
-
+and' :: Answer -> Answer -> Bool
+and' Yes No = False
+and' No Yes = False
+and' _ _ = True
 
 
 --4. or’: Idem acima, porém, deve ser usado o ou lógico.
