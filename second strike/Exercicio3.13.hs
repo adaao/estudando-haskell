@@ -7,13 +7,14 @@ module Exercicio313 where
    de   mesmo   nome,   cujos parâmetros  são:  um 
  Int que  representa  a  dimensão,  e  um Double 
   que  representa  o  valor  da  medida  e  outro  chamado
- MetragemInvalida . Implemente as funções:
+ MetragemInvalida .
 -}
 
 data Metros = Metros { dimensao :: Int,
                        medida :: Double
                      } | MetragemInvalida deriving Show
 
+-- Implemente as funções:
 {- 
  areaQuadrado  ::  Metros  ->  Metros :  
  calcula  a área de um quadrado.
