@@ -2,7 +2,7 @@ module MiniProRH where
 
 data Cargo = Estagiario | Programador | Coordenador | Gerente deriving Show
 
-data Pessoa = Pessoa {cargo :: String, nome :: String} deriving Show
+data Pessoa = Pessoa {cargo :: Cargo, nome :: String} deriving Show
 
 verSalario :: Pessoa -> Double
 verSalario (Pessoa Estagiario _) = 1500
@@ -16,4 +16,12 @@ verFolha pessoa = "{nome: \"" ++ (nome pessoa) ++
                   "\", salario: " ++ show (verSalario pessoa) ++ "}"
 
 promover :: Pessoa -> Pessoa
-promover (Pessoa Estagiario n) = Pessoa
+promover (Pessoa Estagiario n) = (Pessoa Programador n)
+promover (Pessoa Programador n) = (Pessoa Coordenador n)
+promover (Pessoa Coordenador n) = (Pessoa Gerente n)
+promover (Pessoa _ n) = (Pessoa Gerente n)
+
+contratarInicial :: String -> Pessoa
+contratarInicial = Pessoa Estagiario
+
+mediaSalarial :: 

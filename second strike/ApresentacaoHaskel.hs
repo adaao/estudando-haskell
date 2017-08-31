@@ -6,41 +6,51 @@ module Exercicios where
 
 --a)pergNum : recebe via parâmetro uma Pergunta .
 --  Retorna 0 para Nao e 1 para Sim .
-
 data Pergunta = Sim | Nao deriving (Show)
 
 pergNum::Pergunta -> Int
 pergNum  Sim = 1
 pergNum  Nao = 0
 
+-------------------------------------------------
 --b)listPergs : recebe via parâmetro uma lista de
 --Perguntas , e retorna 0s e 1s correspondentes aos
 --constructores contidos na lista.
+
 listPergs:: [Pergunta] -> [Int]
-listPergs xs = [pergNum x | x <- xs ]
+listPergs xs = [pergNum x | x <-xs ] --[Sim, Nao, Sim, Nao, Nao, Sim, Sim]
 
-
---3. and’: recebe duas Perguntas como parâmetro e retorna a tabela verdade do
+-------------------------------------------------
+--c). and’: recebe duas Perguntas como parâmetro e retorna a tabela verdade do
 --and lógico usando Sim como verdadeiro e Nao como falso.
-perAnd:: Pergunta -> Pergunta -> Bool
-perAnd Sim Sim = True  && True
-perAnd Sim Nao = True  && False
-perAnd Nao Nao = False && False
-perAnd Nao Sim = False && True 
+pergToBool:: Pergunta -> Bool 
+pergToBool Sim = True
+pergToBool Nao = False
+
+and':: Pergunta -> Pergunta -> Bool 
+and' x y = and [pergToBool x, pergToBool y]
 
 --4. or’: Idem acima, porém, deve ser usado o ou lógico.
-perOr:: Pergunta -> Pergunta -> Bool
-perOr Sim Sim = True  || True
-perOr Sim Nao = True  || False
-perOr Nao Nao = False || False
-perOr Nao Sim = False || True
+or':: Pergunta -> Pergunta -> Bool 
+or' x y = or [pergToBool x ,pergToBool y]
 
 --5. not’: Idem aos anteriores, porém, usando o not lógico.
-perNot:: Pergunta -> Pergunta -> Bool
-perNot Sim Sim = not (True  && True)
-perNot Sim Nao = not (True  && False)
-perNot Nao Nao = not (False && False)
-perNot Nao Sim = not (False && True)
+not':: Pergunta -> Bool 
+not'  x = not (pergToBool x)
+
+-- outra forma --------------------------------
+and':: Pergunta -> Pergunta -> Pergunta
+and' Sim Sim = Sim
+and' _    _  = Nao
+
+or':: Pergunta -> Pergunta -> Pergunta
+or' Nao Nao = Nao
+or' _    _  = Sim
+
+not':: Pergunta -> Pergunta
+not' Sim = Nao
+not' Nao = Sim
+
 --------------------------------------------------------------------------------
 {-
  3.6) Faça um novo tipo chamado Mes , que possui como
@@ -159,7 +169,7 @@ calcula a área de um retângulo.
 areaRet :: Metros -> Metros -> Metros
 areaRet metros1 metros2
     |(dimensao metros1) == (dimensao metros2) = MetragemInvalida
-    |(medida metros1 <= 0) || (medida metros2 <=0) = MetragemInvalida
+    |(medida metros1 <= 0) || (medida metros2 <= 0) = MetragemInvalida
     |(dimensao metros1 < 0 || dimensao metros1 > 3) = MetragemInvalida
     |(dimensao metros2 < 0 || dimensao metros2 > 3) = MetragemInvalida
     |otherwise = (Metros 1 (medida metros1 * medida metros2))
