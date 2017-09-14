@@ -117,6 +117,7 @@ somaDollar din = foldl (\x y -> Dinheiro ((valor x) + (valor y)) Dollar) (Dinhei
 
 qntdDollar :: [Dinheiro] -> Int
 qntdDollar din = length $ filtraDollar din
+
 {-
 4.9)	Usando	a	função	 	foldl	 ,	crie	lambdas	para:
 Contar	números	negativos	de	uma	lista	de	 	Int	 .
