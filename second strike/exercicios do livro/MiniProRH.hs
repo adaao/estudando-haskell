@@ -24,4 +24,4 @@ promover (Pessoa _ n) = (Pessoa Gerente n)
 contratarInicial :: String -> Pessoa
 contratarInicial = Pessoa Estagiario
 
-mediaSalarial :: 
+mediaSalarial ::
