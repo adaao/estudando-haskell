@@ -1,5 +1,10 @@
 module MiniProRH where
 
+(|>) :: a -> (a -> b) -> b
+(|>) x f = f x
+
+infixl 0 |>
+
 data Cargo = Estagiario | Programador | Coordenador | Gerente deriving Show
 
 data Pessoa = Pessoa {cargo :: Cargo, nome :: String} deriving Show
@@ -24,4 +29,15 @@ promover (Pessoa _ n) = (Pessoa Gerente n)
 contratarInicial :: String -> Pessoa
 contratarInicial = Pessoa Estagiario
 
-mediaSalarial ::
+mediaSalarial :: [Pessoa] -> Double
+mediaSalarial ps = (foldl calculo 0 ps) / (fromIntegral $ length ps)
+                  where
+                    calculo salario pessoa = salario + verSalario pessoa
+
+contratarVariosEstag :: [String] -> [Pessoa]
+contratarVariosEstag ps = fmap contratarInicial ps
+
+rotinaPromocao :: Pessoa -> String
+rotinaPromocao p = p
+                |> promover
+                |> verFolha
