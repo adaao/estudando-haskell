@@ -1,5 +1,6 @@
 module Cap5polimorfismoParametrico where
 
+import Data.Monoid
 {-
 5.1)	 Crie	 o	 tipo	 	 TipoProduto	 	 que	 possui	 os	 values
 constructors	 	Escritorio	 ,	 	Informatica	 ,	 	Livro	 ,	 	Filme	 	 e
@@ -17,12 +18,25 @@ monoides.	Qual(is)	seria(m)	a(s)	diferença(s)?
 data TipoProduto = Escritorio | Informatica | Livro | Filme | Total deriving Show
 
 data Produto = Produto {valor :: Double,
-                        tp :: TipoProduto} | Nada
+                        tp :: TipoProduto} | Nada deriving Show
+                        
+instance Monoid Produto where
+    mempty = Produto 0 Total
+    mappend (Produto x _) (Produto y _) = Produto (x + y) Total
+
+carrinho :: [Produto] 
+carrinho = [Produto 50.99 Livro, Produto 40 Escritorio, Produto 99.99 Informatica]
 
 {-
 
 5.2)	 Crie	 uma	 função	 	totalGeral	 	 que	 recebe	 uma	 lista	 de
 produtos	e	retorna	o	preço	total	deles	usando	o	monoide	anterior.
+-}
+
+totalGeral :: [Produto] -> Produto
+totalGeral xs = foldl mappend mempty xs
+
+{-
 5.3)	 A	 função	 	min	 	 no	 Haskell	 retorna	 o	 menor	 entre	 dois
 números,	por	exemplo,	 	min	4	5	=	4	 .
 Crie	 um	 tipo	 	Min	 	 com	 um	 campo	 inteiro,	 que	 seja
@@ -35,6 +49,11 @@ Quanto	vale	a	expressão	 	Min	 (-32)	 <>	 Min	 (-34)
 Explique	sua	escolha	para	o	 	mempty	 .
 -}
 
+data Min = Min Int deriving (Show, Eq, Ord)
+
+instance Monoid Min where
+    mempty = Min $ maxBound Int
+    mappend (Min x) (Min y) = Min $ min x y
 
 {-
 5.4)	 Crie	 uma	 função	 	minAll	 	 que	 recebe	 um	 	 [Min]	 	 e

@@ -1,0 +1,1 @@
+Product 2 <> Product (getSum (Sum 3 <> Sum 2))
