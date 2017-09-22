@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleInstances, UndecidableInstances #-}
+
 module Cap5polimorfismoParametrico where
 
 import Data.Monoid
@@ -19,12 +21,12 @@ data TipoProduto = Escritorio | Informatica | Livro | Filme | Total deriving Sho
 
 data Produto = Produto {valor :: Double,
                         tp :: TipoProduto} | Nada deriving Show
-                        
+
 instance Monoid Produto where
     mempty = Produto 0 Total
     mappend (Produto x _) (Produto y _) = Produto (x + y) Total
 
-carrinho :: [Produto] 
+carrinho :: [Produto]
 carrinho = [Produto 50.99 Livro, Produto 40 Escritorio, Produto 99.99 Informatica]
 
 {-
@@ -52,14 +54,21 @@ Explique	sua	escolha	para	o	 	mempty	 .
 data Min = Min Int deriving (Show, Eq, Ord)
 
 instance Monoid Min where
-    mempty = Min $ maxBound Int
+    mempty = Min (maxBound :: Int)
     mappend (Min x) (Min y) = Min $ min x y
+
+{-
+escolhi o valor máximo do Int porque qualquer valor comparado seria
+menor ou igual a tal valor
+-}
 
 {-
 5.4)	 Crie	 uma	 função	 	minAll	 	 que	 recebe	 um	 	 [Min]	 	 e
 retorna	um	 	Min	 	contendo	o	menor	valor.
 -}
 
+minAll :: [Min] -> Min
+minAll xs = foldl mappend mempty xs
 
 {-
 5.5)	Crie	o	tipo	 	Paridade	 	com	os	values	constructors	 	Par	 	e
@@ -70,6 +79,26 @@ Para	 	[a]	 :	uma	lista	de	elementos	qualquer	é	 	Par	 	se
 o	número	de	elementos	o	for.
 	Bool	 :	 	False	 	como	 	Par	 ,	 	True	 	como	 	Impar	 .
 -}
+
+data Paridade = Par | Impar deriving (Show)
+
+class ParImpar a where
+  decide :: a -> Paridade
+
+instance ParImpar Int where
+  decide i
+    | mod i 2 == 0 = Par
+    | otherwise = Impar
+
+instance ParImpar Integer where
+  decide i
+    | mod i 2 == 0 = Par
+    | otherwise = Impar
+
+instance ParImpar [a] where
+  decide a
+    | mod (length a) 2 == 0 = Par
+    | otherwise = Impar
 
 
 {-
@@ -87,6 +116,13 @@ Crie	 uma	 função	 	maxAll	 	 que	 recebe	 um	 	[Max]	 	 e
 retorna	um	 	Max	 	contendo	o	maior	valor.
 -}
 
+data Max = Max Int deriving (Show, Ord, Eq)
+
+instance Monoid Max where
+  mempty = Max (minBound :: Int)
+  mappend (Max x) (Max y) = Max $ max x y
+
+-- escolhi o mempty pq qualquer Int comparado sera maior ou igual
 
 {-
 5.7)	Usando	a	estrutura	de	árvore,	monte	uma	função	 	mapa	 ,
@@ -94,6 +130,19 @@ que	 jogue	 uma	 função	 passada	 por	 parâmetro	 para	 todos	 os
 elementos	de	uma	árvore.	Deixe	explícito	o	tipo	desta	função.
 -}
 
+data Arvore a = Nulo | Leaf a | Branch a (Arvore a) (Arvore a) deriving (Show, Eq)
+
+pBrasil = Branch 50 (Branch 30 (Leaf 20) (Leaf 40)) (Branch 90 Nulo (Leaf	100))
+
+mapa :: (a -> b) -> Arvore a -> Arvore b
+mapa f Nulo = Nulo
+mapa f (Leaf a) = Leaf (f a)
+mapa f (Branch x y z) = Branch (f x) (mapa f y) (mapa f z)
+
+instance Functor Arvore where
+  fmap f Nulo = Nulo
+  fmap f (Leaf a) = Leaf (f a)
+  fmap f (Branch x y z) = Branch (f x) (fmap f y) (fmap f z)
 
 {-
 5.8)	 Usando	 o	 exercício	 anterior,	 some	 5	 a	 cada	 elemento	 de
