@@ -147,6 +147,13 @@ instance Functor Arvore where
 {-
 5.8)	 Usando	 o	 exercício	 anterior,	 some	 5	 a	 cada	 elemento	 de
 uma	árvore	de	inteiros.
+-}
+
+--mapa (+5) pBrasil
+-- protocolo americanas 2517092699723
+
+
+{-
 5.9)	 Uma	 lista	 ordenada	 é	 uma	 lista	 cujos	 elementos	 são
 inseridos	de	forma	ordenada	(crescente).	Usando	o	tipo	 	ListaOrd
 a	 =	 a	 :?:	 (ListaOrd	 a)	 |	 Nulo	 deriving	 Show	 ,	 crie	 as
@@ -160,12 +167,32 @@ Observação:	a	função	 	remover	 	deve	buscar	um	elemento.	Se
 não	achar,	a	lista	deve	se	manter	intacta.
 -}
 
+data ListaOrd a = a :?: (ListaOrd a) | Nula deriving Show
+{-
+listaord1 = (ListaOrd 4 listaord2)
+
+listaord2 = (ListaOrd 5 listaord3)
+
+listaord3 = (ListaOrd 2 Nula)
+-}
+--inserir :: (Ord a) => a -> ListaOrd a -> ListaOrd a
+
+
+--inserir a Nulo = Nulo
+--inserir
 
 {-
 5.10)	Usando	a	estrutura	de	árvore	vista,	faça	uma	função	que
 some	todos	os	elementos	de	uma	árvore	de	números.
 -}
 
+emOrdem :: Arvore a -> [a]
+emOrdem (Branch y l r) = emOrdem l ++ [y] ++ emOrdem r
+emOrdem (Leaf x) = [x]
+emOrdem Nulo = []
+
+somaTudo :: Num a => Arvore a -> a
+somaTudo x = foldl (+) 0 . emOrdem $ x
 
 {-
 5.11)	 Implemente	 os	 percursos	 pós-ordem	 e	 pré-ordem.	 Via
@@ -174,15 +201,38 @@ comentário,	 faça	 os	 "testes	 de	 mesa"	 para	 os	 dois	 percursos	 da
 Nula))	(Raiz	20	Nula	(Raiz	22	(Folha	21)	Nula))	 .
 -}
 
+ipe = Branch 15 (Branch 11 (Leaf 6) (Branch 12 (Leaf 10) Nulo)) (Branch 20 Nulo (Branch 22 (Leaf 21) Nulo))
+
+posOrdem :: Arvore a -> [a]
+posOrdem (Branch y l r) = posOrdem r ++ [y] ++ posOrdem l
+posOrdem (Leaf x) = [x]
+posOrdem Nulo = []
+
+preOrdem :: Arvore a -> [a]
+preOrdem (Branch y l r) = [y] ++ preOrdem l ++ preOrdem r
+preOrdem (Leaf x) = [x]
+preOrdem Nulo = []
 
 {-
 5.12)	 Faça	 uma	 função	 para	 inserir	 um	 elemento	 em	 uma
 árvore	de	busca	binária	(use	a	mesma	estrutura	vista).
 -}
 
+inserirNaArvore :: Ord a => a -> Arvore a -> Arvore a
+inserirNaArvore x Nulo = Leaf x
+inserirNaArvore x (Leaf y)
+  |x <= y = Branch y (Leaf x) Nulo
+  |x > y = Branch y Nulo (Leaf x)
+inserirNaArvore x (Branch j l r)
+  |x <= j = Branch j (inserirNaArvore x l) r
+  |x > j = Branch j l (inserirNaArvore x r)
 
 {-
 5.13)	Faça	uma	função	que,	a	partir	de	uma	lista	de	elementos
 de	tipo,	insira	todos	os	elementos	desta	lista	na	árvore	e	retorne-a,
 usando	o	exercício	anterior.
 -}
+
+listaNaArvore :: Ord a => [a] -> Arvore a -> Arvore a
+listaNaArvore [] arvore = arvore
+listaNaArvore (x:xs) arvore = listaNaArvore xs $ inserirNaArvore x arvore
