@@ -20,20 +20,7 @@ instance Monoid Min where
     mappend (Min x) (Min y) = Min $ min x y
     
     
--- import Data.Functor.Contravariant
 
-data NovoPred a = NovoPred {runNovoPred :: Maybe a -> Bool} 
-
-instance Contravariant NovoPred where
-
-{-
-Procurei a typeclass Contravariant para terminar o exercício e não consigo importar.
-O Haskell diz que não existe.
-De todo jeito, seguindo os exemplos do livro, o resto do código seria: -}
-
-instance Contravariant NovoPred where
-  contramap func (NovoPred pred) = NovoPred (pred . func)
-  
   
   
   

@@ -1,35 +1,32 @@
 module Cap07 where
 
---module	Cap07 ( Contravariant(..))	where	
+import Data.Monoid
+import Data.Functor
 
-data Predicado a =  Predicado	{runPred ::	a -> Bool} 
+data Fantasma a = Fantasma a deriving Show
+
+instance Functor Fantasma where
+  fmap g (Fantasma a) = Fantasma (g a)
+
+--------------------------------------------------------------
 
 
-ehMenor4	::	Predicado	Int
-ehMenor4	=	Predicado	(\x	->	x	<	4)
 
-tamanhoOito	::	Predicado	String
-tamanhoOito	=	Predicado	(\x	->	length	x	==	8)
+data Min = Min Int deriving (Show, Eq, Ord)
 
+instance Monoid Min where
+    mempty = Min (maxBound :: Int)
+    mappend (Min x) (Min y) = Min $ min x y
+
+---------------------------------------------------------------
+
+data NovoPred a = NovoPred {runNovoPred :: Maybe a -> Bool} 
 
 class Contravariant f where
-    contramap :: (a -> b) -> f b -> f a
-    
-instance Contravariant Predicado where
-    contramap g (Predicado p) = Predicado (p . g)
-
-{-
-class	Contravariant	f	where
-contramap	::	(a	->	b)	->	f	b	->	f	a
---(>$) :: b -> f b -> f a
---(>$) = contramap . const
+  contramap :: (a -> b) -> f b -> f a
 
 
-class Contravariant Predicado where 
-  contramap	::	(a	->	b)	->	Predicado	b	->	Predicado	a
-  (>$) :: b -> Predicate b -> Predicate a 
-
-
-instance Contravariant Predicado where    
-contramap  g (Predicado	p) = Predicado (p.g)
--}
+instance Contravariant NovoPred where
+  contramap func (NovoPred pred) = NovoPred (pred.(fmap func))
+  
+-------------------------------------------------------------
