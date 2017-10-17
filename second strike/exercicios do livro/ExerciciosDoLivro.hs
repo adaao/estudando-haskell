@@ -5,8 +5,10 @@ module ExerciciosDoLivro where
   a21 = [11^x | x <- [0..6]]
 
   b21 = [x | x <- [1..40], mod x 4 /= 0]
-
-  c21 = ["A" ++ x ++ "BB" | x <- ["a".."g"]]
+  
+c21 = [['A'] ++ [x] ++ ['B','B'] | x <- ['a'..'g']]
+ -- c21 = ["A" ++ x ++ "BB" | x <- ["a".."g"]]
+ --resposta acima esta correta :p
 
   d21 = [5, 8..41]
 
