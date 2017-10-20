@@ -1,0 +1,35 @@
+https://github.com/romefeller/yesodvazio
+
+git init
+git status
+git remote add origin <link>
+
+
+git clone https://github.com/romefeller/yesodvazio
+
+Alterar o banco de dados do projeto
+stack init
+stack build
+
+Os pacotes devem ser declarados no package.yaml
+"- http-types"
+
+Conectando o projeto ao banco de dados via cli
+
+psql -h <host> -U <usuario> -d <banco>
+
+--------------------------------------------------------------------------------
+
+config/routes:
++/cliente/inserir ClienteInsereR POST
+
+Os tipos serão criados como:
+
+data Cliente = Cliente {
+  clienteNome    :: Text,
+  clienteCpf     :: Text,
+  clienteSalario :: Double
+} deriving Show
+
+Cria também as tabelas no banco um tipo novo chamado ClienteId e um tipo para 
+cada campo, no caso, ClienteNome, ClienteCpf, ClienteSalario.
